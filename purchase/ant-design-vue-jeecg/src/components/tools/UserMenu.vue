@@ -33,7 +33,7 @@
     </span>
     <header-notice class="action"/>
     <a-dropdown>
-      <span class="action action-full ant-dropdown-link user-dropdown-menu">
+      <span v-show = false class="action action-full ant-dropdown-link user-dropdown-menu">
         <a-avatar class="avatar" size="small" :src="getAvatar()"/>
         <span v-if="isDesktop()">欢迎您，{{ nickname() }}</span>
       </span>

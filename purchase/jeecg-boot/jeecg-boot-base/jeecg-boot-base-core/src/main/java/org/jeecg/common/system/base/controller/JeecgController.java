@@ -22,7 +22,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,7 +53,9 @@ public class JeecgController<T, S extends IService<T>> {
         // Step.2 获取导出数据
         List<T> pageList = service.list(queryWrapper);
         List<T> exportList = null;
-
+        for(T t : exportList){
+           Sale sale = t;
+        }
         // 过滤选中数据
         String selections = request.getParameter("selections");
         if (oConvertUtils.isNotEmpty(selections)) {
@@ -61,11 +65,16 @@ public class JeecgController<T, S extends IService<T>> {
             exportList = pageList;
         }
 
+
+
         // Step.3 AutoPoi 导出Excel
+        Date time =new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String timeFormat = sdf.format(time);
         ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
         mv.addObject(NormalExcelConstants.FILE_NAME, title); //此处设置的filename无效 ,前端会重更新设置一下
         mv.addObject(NormalExcelConstants.CLASS, clazz);
-        mv.addObject(NormalExcelConstants.PARAMS, new ExportParams(title + "报表", "导出人:" + sysUser.getRealname(), title));
+        mv.addObject(NormalExcelConstants.PARAMS, new ExportParams(title + "报表", "时间:" + timeFormat, title));
         mv.addObject(NormalExcelConstants.DATA_LIST, exportList);
         return mv;
     }

@@ -9,7 +9,7 @@
           </a>
         </div>
         <div class="desc">
-          Jeecg Boot 是中国最具影响力的 企业级 快速开发平台
+          武汉泓强食品有限责任公司
         </div>
       </div>
 

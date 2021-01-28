@@ -252,6 +252,7 @@
 			<artifactId>justauth-spring-boot-starter</artifactId>
 			<version>${justauth-spring-boot-starter.version}</version>
 		</dependency>
-	</dependencies>
+
+    </dependencies>
 
 </project>

@@ -178,6 +178,7 @@
     },
     methods: {
       getQueryParams(){
+        console.info(this.queryParam);
         var param = Object.assign({}, this.queryParam,this.isorter);
         param.field = this.getQueryField();
         param.pageNo = this.ipagination.current;
