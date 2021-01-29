@@ -1,5 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.purchase.mapper.SaleMapper">
+    <!-- PERT查询映射结果 -->
 
+    <resultMap id="BaseResultMap" type="org.jeecg.modules.purchase.entity.SaleVo">
+        <result column="dailySales" property="dailySales"/>
+        <result column="dailyProfit" property="dailyProfit"/>
+        <result column="salesMonth" property="salesMonth"/>
+        <result column="profitMonth" property="profitMonth"/>
+    </resultMap>
+
+    <resultMap id="CaseResultMap" type="org.jeecg.modules.purchase.entity.SaleCur12Vo">
+        <result column="month" property="month"/>
+        <result column="total" property="total"/>
+    </resultMap>
+
+    <select id="queryCurrentSale" resultMap="BaseResultMap">
+       SELECT
+	*
+FROM
+	( SELECT sum( total_price ) AS dailySales FROM sale WHERE to_days( create_time ) = to_days( now( ) ) ) a,
+	( SELECT sum( total_price ) AS dailyProfita FROM goods_use_record WHERE to_days( create_time ) = to_days( now( ) ) ) b,
+	( SELECT sum( total_price ) AS salesMonth FROM sale WHERE DATE_FORMAT( create_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ), '%Y%m' ) ) c,
+	( SELECT sum( total_price ) AS profitMonth FROM goods_use_record WHERE DATE_FORMAT( create_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ), '%Y%m' ) ) d
+    </select>
+
+    <insert id="dropView">
+DROP VIEW IF EXISTS `past_12_month_view`;
+    </insert>
+    <insert id="createView">
+CREATE
+VIEW `past_12_month_view` AS
+    SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `month`
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `month`
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `month`
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `month`
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `month`
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `month`
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') AS `month`
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') AS `month`
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') AS `month`
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') AS `month`
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') AS `month`
+    UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') AS `month`
+
+    </insert>
+
+
+    <select id="queryCur12Total" resultMap="CaseResultMap">
+    SELECT
+	v.MONTH,
+	sum(ifnull( a.total, 0 )) AS total
+FROM
+	past_12_month_view v
+	LEFT JOIN (
+SELECT
+	DATE_FORMAT( t.create_time, '%Y-%m' ) MONTH,
+	sum( t.total_price ) total
+FROM
+	sale t
+WHERE
+	DATE_FORMAT( create_time, '%Y-%m' ) > DATE_FORMAT( date_sub( curdate( ), INTERVAL 12 MONTH ), '%Y-%m' )
+GROUP BY
+MONTH
+	) a ON v.MONTH = a.MONTH
+	group by v.MONTH
+    </select>
 </mapper>

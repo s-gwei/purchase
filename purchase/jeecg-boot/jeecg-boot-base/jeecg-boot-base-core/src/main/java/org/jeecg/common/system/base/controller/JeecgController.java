@@ -53,9 +53,7 @@ public class JeecgController<T, S extends IService<T>> {
         // Step.2 获取导出数据
         List<T> pageList = service.list(queryWrapper);
         List<T> exportList = null;
-        for(T t : exportList){
-           Sale sale = t;
-        }
+
         // 过滤选中数据
         String selections = request.getParameter("selections");
         if (oConvertUtils.isNotEmpty(selections)) {
@@ -64,17 +62,23 @@ public class JeecgController<T, S extends IService<T>> {
         } else {
             exportList = pageList;
         }
-
+        Date time =new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String timeFormat ="时间"+sdf.format(time);
+        String[] str = title.split(",");
+        String total = "";
+        if(str.length>1){
+            title = str[0];
+            timeFormat += "   总价(元)："+str[1];
+        }
 
 
         // Step.3 AutoPoi 导出Excel
-        Date time =new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String timeFormat = sdf.format(time);
+
         ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
         mv.addObject(NormalExcelConstants.FILE_NAME, title); //此处设置的filename无效 ,前端会重更新设置一下
         mv.addObject(NormalExcelConstants.CLASS, clazz);
-        mv.addObject(NormalExcelConstants.PARAMS, new ExportParams(title + "报表", "时间:" + timeFormat, title));
+        mv.addObject(NormalExcelConstants.PARAMS, new ExportParams(title + "报表",timeFormat,title));
         mv.addObject(NormalExcelConstants.DATA_LIST, exportList);
         return mv;
     }

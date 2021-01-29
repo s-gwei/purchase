@@ -9,12 +9,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.ss.formula.functions.T;
+import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.common.util.oConvertUtils;
-import org.jeecg.modules.purchase.entity.Customer;
-import org.jeecg.modules.purchase.entity.Product;
-import org.jeecg.modules.purchase.entity.Sale;
+import org.jeecg.modules.purchase.entity.*;
 import org.jeecg.modules.purchase.service.ICustomerService;
 import org.jeecg.modules.purchase.service.IProductService;
 import org.jeecg.modules.purchase.service.ISaleService;
@@ -57,6 +59,8 @@ public class SaleController extends JeecgController<Sale, ISaleService> {
 	private IProductService productService;
 	@Autowired
 	private ICustomerService customerService;
+
+
 	
 	/**
 	 * 分页列表查询
@@ -166,13 +170,25 @@ public class SaleController extends JeecgController<Sale, ISaleService> {
     */
     @RequestMapping(value = "/exportXls")
     public ModelAndView exportXls(HttpServletRequest request, Sale sale) {
+		// Step.1 组装查询条件
+		QueryWrapper<Sale> queryWrapper = QueryGenerator.initQueryWrapper(sale, request.getParameterMap());
+		LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
 
+		// Step.2 获取导出数据
+		List<Sale> exportList = saleService.list(queryWrapper);
 
-        return super.exportXls(request, sale, Sale.class, "武汉泓强食品有限责任公司");
+		// 过滤选中数据
+		Double total = 0d;
+		for(Sale sales : exportList){
+			total+=sales.getTotalPrice() == null?0:sales.getTotalPrice();
+		}
+
+        return super.exportXls(request, sale, Sale.class, "武汉泓强食品有限责任公司,"+total);
 
     }
 
-    /**
+
+	 /**
       * 通过excel导入数据
     *
     * @param request
@@ -184,4 +200,41 @@ public class SaleController extends JeecgController<Sale, ISaleService> {
         return super.importExcel(request, response, Sale.class);
     }
 
-}
+	 /**
+	  * 查询本日销售额
+	  *
+	  * @return
+	  */
+	 @AutoLog(value = "出货订单表-查询")
+	 @ApiOperation(value="出货订单表-查询", notes="出货订单表-查询")
+	 @GetMapping(value = "/querySaleInfo")
+	 public Result<?> queryCurrentSale() {
+		 SaleVo saleVo = saleService.queryCurrentSale();
+		 //计算毛利润
+		 Double dailySales = saleVo.getDailySales() == null ? 0 :saleVo.getDailySales();
+		 saleVo.setDailySales(dailySales);
+		 Double dailyProfit = saleVo.getDailyProfit() == null ? 0 :saleVo.getDailyProfit();
+		 saleVo.setDailyProfit(dailySales - dailyProfit);
+		 Double salesMonth = saleVo.getProfitMonth() == null ? 0 :saleVo.getSalesMonth();
+		 saleVo.setSalesMonth(salesMonth);
+		 Double profitMonth = saleVo.getDailyProfit() == null ? 0:saleVo.getDailyProfit();
+		 saleVo.setProfitMonth(salesMonth - profitMonth);
+		 return Result.OK(saleVo);
+	 }
+
+	 /**
+	  * 查询最近12个月销售数据
+	  *
+	  * @return
+	  */
+	 @AutoLog(value = "出货订单表-最近12个月销售数据")
+	 @ApiOperation(value="出货订单表-最近12个月销售数据", notes="出货订单表-最近12个月销售数据")
+	 @GetMapping(value = "/queryCur12Total")
+	 public Result<?> queryCur12Total() {
+		 List<SaleCur12Vo> saleCur12Vo = saleService.queryCur12Total();
+		 //计算毛利润
+		 return Result.OK(saleCur12Vo);
+	 }
+
+
+ }
