@@ -239,11 +239,12 @@
 
 	<build>
 		<plugins>
-			<!--<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			 指定JDK编译版本 -->
+<!--			<plugin>-->
+<!--				<groupId>org.springframework.boot</groupId>-->
+<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--&lt;!&ndash;				<artifactId>maven-plugin</artifactId>&ndash;&gt;-->
+<!--			</plugin>-->
+<!--			 指定JDK编译版本 &ndash;&gt;-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -290,6 +291,7 @@
 				</includes>
 			</resource>
 		</resources>
+
 	</build>
     <!-- 环境 -->
     <profiles>

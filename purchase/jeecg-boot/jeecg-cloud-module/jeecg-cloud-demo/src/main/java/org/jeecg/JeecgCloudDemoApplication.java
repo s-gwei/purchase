@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @EnableFeignClients(basePackages = {"org.jeecg"})
-@SpringBootApplication(scanBasePackages = "org.jeecg")
+//@SpringBootApplication(scanBasePackages = "org.jeecg")
 public class JeecgCloudDemoApplication {
 
     public static void main(String[] args) {

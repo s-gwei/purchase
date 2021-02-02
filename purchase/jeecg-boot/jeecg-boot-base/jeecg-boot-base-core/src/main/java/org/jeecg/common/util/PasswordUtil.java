@@ -82,6 +82,7 @@ public class PasswordUtil {
 	public static String encrypt(String plaintext, String password, String salt) {
 
 		Key key = getPBEKey(password);
+
 		byte[] encipheredData = null;
 		PBEParameterSpec parameterSpec = new PBEParameterSpec(salt.getBytes(), ITERATIONCOUNT);
 		try {

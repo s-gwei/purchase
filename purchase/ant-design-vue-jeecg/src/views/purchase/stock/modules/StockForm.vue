@@ -5,8 +5,8 @@
         
         <a-row>
           <a-col :md="14" :sm="16">
-           <a-form-item label="货品名称">
-                    <a-select  name="projectNameList" v-decorator="['id']" placeholder="请选择货品名称" @change="selectOrderPro()">
+           <a-form-item label="货品名称"  style="display:flex;position:relative;left:90px">
+                    <a-select style="width:350px" name="projectNameList" v-decorator="['id']" placeholder="请选择货品名称" @change="selectOrderPro()">
                         <a-select-option value="">请选择</a-select-option>
                         <a-select-option v-for="item in orderProList" :key="item.id" :value="item.id" >{{item.name}},单价:{{item.unitPrice}}/{{item.company}}</a-select-option>
                     </a-select>

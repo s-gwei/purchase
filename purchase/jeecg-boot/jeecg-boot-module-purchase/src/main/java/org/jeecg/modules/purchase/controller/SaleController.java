@@ -215,9 +215,9 @@ public class SaleController extends JeecgController<Sale, ISaleService> {
 		 saleVo.setDailySales(dailySales);
 		 Double dailyProfit = saleVo.getDailyProfit() == null ? 0 :saleVo.getDailyProfit();
 		 saleVo.setDailyProfit(dailySales - dailyProfit);
-		 Double salesMonth = saleVo.getProfitMonth() == null ? 0 :saleVo.getSalesMonth();
+		 Double salesMonth = saleVo.getSalesMonth() == null ? 0 :saleVo.getSalesMonth();
 		 saleVo.setSalesMonth(salesMonth);
-		 Double profitMonth = saleVo.getDailyProfit() == null ? 0:saleVo.getDailyProfit();
+		 Double profitMonth = saleVo.getProfitMonth() == null ? 0:saleVo.getProfitMonth();
 		 saleVo.setProfitMonth(salesMonth - profitMonth);
 		 return Result.OK(saleVo);
 	 }

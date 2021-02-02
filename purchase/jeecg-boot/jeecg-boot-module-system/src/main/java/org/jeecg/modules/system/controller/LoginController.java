@@ -100,9 +100,12 @@ public class LoginController {
 		}
 		
 		//2. 校验用户名或密码是否正确
+		log.debug(username+", "+password);
 		String userpassword = PasswordUtil.encrypt(username, password, sysUser.getSalt());
 		String syspassword = sysUser.getPassword();
+		log.debug(userpassword+", "+syspassword);
 		if (!syspassword.equals(userpassword)) {
+			log.debug("用户名或密码错误");
 			result.error500("用户名或密码错误");
 			return result;
 		}
@@ -417,6 +420,7 @@ public class LoginController {
 			String realKey = MD5Util.MD5Encode(lowerCaseCode+key, "utf-8");
 			redisUtil.set(realKey, lowerCaseCode, 60);
 			String base64 = RandImageUtil.generate(code);
+			log.debug(base64);
 			res.setSuccess(true);
 			res.setResult(base64);
 		} catch (Exception e) {

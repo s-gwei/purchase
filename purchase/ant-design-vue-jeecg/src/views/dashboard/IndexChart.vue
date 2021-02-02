@@ -22,7 +22,7 @@
       </a-col>
             <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
         <chart-card :loading="loading" title="当日利润" total="" v-model="saleInfo.dailySales">
-          <h1 style="font-size: 50px;">{{saleInfo.dailyProfit}}元</h1>
+          <h1 >{{saleInfo.dailyProfit}}元</h1>
         </chart-card>
       </a-col>
                <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">

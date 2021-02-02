@@ -1,14 +1,17 @@
 <template>
-
   <a-spin :spinning="confirmLoading">
     <j-form-container :disabled="formDisabled">
       <a-form :form="form" slot="detail">
-        <a-row class="row-set" style="width:100%">
-          <div class="div-set" style="width:100%">
+        <a-row class="row-set" style="width: 100%">
+          <div class="div-set" style="width: 100%">
             <a-col :md="14" :sm="16">
-              <a-form-item class="form-item" label="客户店名" style="display:flex;position:relative;left:117px">
-                
-                <a-select style="width:350px" name="projectNameList" v-decorator="['customerId']" placeholder="请选择客户">
+              <a-form-item class="form-item" label="客户店名" style="display: flex; position: relative; left: 117px">
+                <a-select
+                  style="width: 350px"
+                  name="projectNameList"
+                  v-decorator="['customerId']"
+                  placeholder="请选择客户"
+                >
                   <a-select-option value="">请选择</a-select-option>
                   <a-select-option v-for="item in couList" :key="item.id" :value="item.id">{{
                     item.shopName
@@ -19,8 +22,13 @@
           </div>
           <div style="align: auto">
             <a-col :md="14" :sm="16">
-              <a-form-item label="产品名称" style="display:flex;position:relative;left:117px">
-                <a-select  style="width:350px" name="projectNameList" v-decorator="['productId']" placeholder="请选择产品">
+              <a-form-item label="产品名称" style="display: flex; position: relative; left: 117px">
+                <a-select
+                  style="width: 350px"
+                  name="projectNameList"
+                  v-decorator="['productId']"
+                  placeholder="请选择产品"
+                >
                   <a-select-option value="">请选择</a-select-option>
                   <a-select-option v-for="item in proList" :key="item.id" :value="item.id">{{
                     item.name
@@ -50,7 +58,7 @@
             </a-form-item>
           </a-col>
           <a-col :span="24">
-            <a-form-item label="数量" :labelCol="labelCol" :wrapperCol="wrapperCol" @change="">
+            <a-form-item label="数量" :labelCol="labelCol" :wrapperCol="wrapperCol">
               <a-input-number v-decorator="['account']" placeholder="请输入数量" style="width: 100%" @blur="calcul()" />
             </a-form-item>
           </a-col>
@@ -174,11 +182,25 @@ export default {
         return
       }
       let record = []
-      record.totalPrice = unitPrice * account
+      record.totalPrice = this.NumberMul(unitPrice,account)
       console.info(record.totalPrice)
       this.model = Object.assign({}, record)
       this.form.setFieldsValue(pick(this.model, 'totalPrice'))
     },
+
+     NumberMul(arg1, arg2) {
+    var m = 0;
+    var s1 = arg1.toString();
+    var s2 = arg2.toString();
+    try {
+        m += s1.split(".")[1].length;
+    } catch (e) {}
+    try {
+        m += s2.split(".")[1].length;
+    } catch (e) {}
+ 
+    return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+},
     //查询产品信息
     queryProList() {
       getAction(this.url.queryProList).then((res) => {
