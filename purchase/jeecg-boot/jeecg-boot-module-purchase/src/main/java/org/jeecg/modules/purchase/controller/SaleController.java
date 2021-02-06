@@ -211,6 +211,9 @@ public class SaleController extends JeecgController<Sale, ISaleService> {
 	 public Result<?> queryCurrentSale() {
 		 SaleVo saleVo = saleService.queryCurrentSale();
 		 //计算毛利润
+		 if(saleVo == null ){
+			 return Result.OK(saleVo);
+		 }
 		 Double dailySales = saleVo.getDailySales() == null ? 0 :saleVo.getDailySales();
 		 saleVo.setDailySales(dailySales);
 		 Double dailyProfit = saleVo.getDailyProfit() == null ? 0 :saleVo.getDailyProfit();
@@ -237,4 +240,29 @@ public class SaleController extends JeecgController<Sale, ISaleService> {
 	 }
 
 
+	 /**
+	  * 查询最近12个月毛利润
+	  *
+	  * @return
+	  */
+	 @AutoLog(value = "出货订单表-最近12个月销售数据")
+	 @ApiOperation(value="出货订单表-最近12个月销售数据", notes="出货订单表-最近12个月销售数据")
+	 @GetMapping(value = "/queryCur12TotalProfit")
+	 public Result<?> queryCur12TotalProfit() {
+		 List<SaleCur12Vo> saleCur12VoProfit = saleService.queryCur12TotalProfit();
+		 return Result.OK(saleCur12VoProfit);
+	 }
+
+	 /**
+	  * 查询最近12个月
+	  *
+	  * @return
+	  */
+	 @AutoLog(value = "出货订单表-最近12个月销售数据")
+	 @ApiOperation(value="出货订单表-最近12个月销售数据", notes="出货订单表-最近12个月销售数据")
+	 @GetMapping(value = "/query12")
+	 public Result<?> query12() {
+		 saleService.query12();
+		 return Result.OK();
+	 }
  }

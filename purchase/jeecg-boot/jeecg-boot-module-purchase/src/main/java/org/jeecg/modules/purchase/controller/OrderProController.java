@@ -98,6 +98,8 @@ public class OrderProController extends JeecgController<OrderPro, IOrderProServi
 			stock.setUnitPrice(orderPro.getUnitPrice());
 			stock.setAccount(orderPro.getAccount());
 			stock.setTotalPrice(orderPro.getTotalPrice());
+			stock.setUpdateTime(orderPro.getCreateTime());
+			stock.setUpdateBy(orderPro.getCreateBy());
 			stockService.save(stock);
 		}else{
 			stock.setUpdateBy(orderPro.getCreateBy());

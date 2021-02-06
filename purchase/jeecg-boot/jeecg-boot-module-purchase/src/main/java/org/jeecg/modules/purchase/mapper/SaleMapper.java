@@ -25,4 +25,6 @@ public interface SaleMapper extends BaseMapper<Sale> {
     List<SaleCur12Vo> queryCur12Total();
 
     void dropView();
+
+    List<SaleCur12Vo> queryCur12TotalProfit();
 }

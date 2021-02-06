@@ -66,4 +66,27 @@ MONTH
 	) a ON v.MONTH = a.MONTH
 	group by v.MONTH
     </select>
+
+
+    <select id="queryCur12TotalProfit" resultMap="CaseResultMap">
+            SELECT
+                v.MONTH,
+                sum( ifnull( a.total, 0 ) ) AS total
+            FROM
+                past_12_month_view v
+                LEFT JOIN (
+            SELECT
+                DATE_FORMAT( t.create_time, '%Y-%m' ) MONTH,
+                sum( t.total_price ) total
+            FROM
+                goods_use_record t
+            WHERE
+                DATE_FORMAT( create_time, '%Y-%m' ) > DATE_FORMAT( date_sub( curdate( ), INTERVAL 12 MONTH ), '%Y-%m' )
+            GROUP BY
+            MONTH
+                ) a ON v.MONTH = a.MONTH
+            GROUP BY
+                v.MONTH
+
+    </select>
 </mapper>

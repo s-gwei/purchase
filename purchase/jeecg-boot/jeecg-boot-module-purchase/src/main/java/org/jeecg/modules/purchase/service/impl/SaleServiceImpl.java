@@ -30,10 +30,29 @@ public class SaleServiceImpl extends ServiceImpl<SaleMapper, Sale> implements IS
 
     @Override
     public List<SaleCur12Vo> queryCur12Total() {
+        return saleMapper.queryCur12Total();
+    }
+
+    @Override
+    public List<SaleCur12Vo> queryCur12TotalProfit() {
         //删除以前视图
         saleMapper.dropView();
         //创建最忌12个月视图
         saleMapper.createView();
-        return saleMapper.queryCur12Total();
+        List<SaleCur12Vo> saleCur12Vo = saleMapper.queryCur12Total();
+        List<SaleCur12Vo> saleCur12VoProfit = saleMapper.queryCur12TotalProfit();
+        //计算毛利润
+        for(int i=0;i<saleCur12VoProfit.size();i++){
+            saleCur12VoProfit.get(i).setTotal(saleCur12Vo.get(i).getTotal() - saleCur12VoProfit.get(i).getTotal());
+        }
+        return saleCur12VoProfit;
+    }
+
+    @Override
+    public void query12() {
+        //删除以前视图
+        saleMapper.dropView();
+        //创建最忌12个月视图
+        saleMapper.createView();
     }
 }

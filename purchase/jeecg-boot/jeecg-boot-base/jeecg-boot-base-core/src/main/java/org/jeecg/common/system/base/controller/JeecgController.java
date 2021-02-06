@@ -13,6 +13,8 @@ import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
+import org.jeecgframework.poi.excel.export.styler.ExcelExportStylerBorderImpl;
+import org.jeecgframework.poi.excel.export.styler.ExcelExportStylerDefaultImpl;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,11 +76,12 @@ public class JeecgController<T, S extends IService<T>> {
 
 
         // Step.3 AutoPoi 导出Excel
-
+        ExportParams exportParamse =  new ExportParams(title + "报表",timeFormat,title);
+        exportParamse.setStyle(ExcelExportStylerBorderImpl.class);
         ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
         mv.addObject(NormalExcelConstants.FILE_NAME, title); //此处设置的filename无效 ,前端会重更新设置一下
         mv.addObject(NormalExcelConstants.CLASS, clazz);
-        mv.addObject(NormalExcelConstants.PARAMS, new ExportParams(title + "报表",timeFormat,title));
+        mv.addObject(NormalExcelConstants.PARAMS, exportParamse);
         mv.addObject(NormalExcelConstants.DATA_LIST, exportList);
         return mv;
     }

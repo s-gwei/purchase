@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 1111
   tomcat:
     max-swallow-size: -1
   error:
@@ -131,7 +131,7 @@ spring:
         connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
       datasource:
         master:
-          url: jdbc:mysql://101.37.37.159:3306/jeecg-boot?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+          url: jdbc:mysql://39.104.17.229:3306/purchase?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
           username: root
           password: sungw
           driver-class-name: com.mysql.cj.jdbc.Driver
@@ -145,7 +145,7 @@ spring:
   redis:
     database: 0
 #    host: 192.168.200.251
-    host: 101.37.37.159
+    host: 39.104.17.229
     lettuce:
       pool:
         max-active: 8   #最大连接数据库连接数,设 0 为没有限制

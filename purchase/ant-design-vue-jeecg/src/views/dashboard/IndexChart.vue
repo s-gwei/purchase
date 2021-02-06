@@ -2,7 +2,7 @@
   <div class="page-header-index-wide">
     <a-row :gutter="24">
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="当日销售额" total="" v-model="saleInfo.dailySales">
+        <chart-card :loading="loading" title="当日销售额" total="" >
           <h1>{{saleInfo.dailySales}}元</h1>
           <!-- <a-tooltip title="指标说明" slot="action">
             <a-icon type="info-circle-o" />
@@ -21,17 +21,17 @@
         </chart-card>
       </a-col>
             <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="当日利润" total="" v-model="saleInfo.dailySales">
+        <chart-card :loading="loading" title="当日利润" total="" >
           <h1 >{{saleInfo.dailyProfit}}元</h1>
         </chart-card>
       </a-col>
                <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="当月销售额" total="" v-model="saleInfo.dailySales">
+        <chart-card :loading="loading" title="当月销售额" total="" >
           <h1>{{saleInfo.salesMonth}}元</h1>
         </chart-card>
       </a-col>
                <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="当月利润" total="" v-model="saleInfo.dailySales">
+        <chart-card :loading="loading" title="当月利润" total="" >
           <h1>{{saleInfo.profitMonth}}元</h1>
         </chart-card>
       </a-col>
@@ -91,7 +91,17 @@
             </div> 
             <a-range-picker :style="{width: '256px'}" />
           </div> -->
-          <a-tab-pane loading="true" tab="销售额" key="1">
+             <a-tab-pane loading="true" tab="毛利润" key="1">
+            <a-row>
+              <a-col :xl="24" :lg="24" :md="12" :sm="24" :xs="24">
+                <bar title="毛利润排行" :dataSource="proData"/>
+              </a-col>
+              <!-- <a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">
+                <rank-list title="门店销售排行榜" :list="rankList"/>
+              </a-col> -->
+            </a-row>
+          </a-tab-pane>
+          <a-tab-pane loading="true" tab="销售额" key="2">
             <a-row>
               <a-col :xl="24" :lg="24" :md="12" :sm="24" :xs="24">
                 <bar title="销售额排行" :dataSource="barData"/>
@@ -101,6 +111,7 @@
               </a-col> -->
             </a-row>
           </a-tab-pane>
+
           <!-- <a-tab-pane tab="销售趋势" key="2">
             <a-row>
               <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">
@@ -174,6 +185,7 @@
     })
   }
   const barData = []
+  const proData = []
 
   export default {
     name: "IndexChart",
@@ -194,7 +206,9 @@
       return {
         url: {
           querySaleInfo: "/purchase/sale/querySaleInfo",
-          queryCur12Total:"/purchase/sale/queryCur12Total"
+          queryCur12Total:"/purchase/sale/queryCur12Total",
+          queryCur12TotalProfit:"/purchase/sale/queryCur12TotalProfit",
+          query12:"/purchase/sale/query12",
         },
         saleInfo:{
            dailySales:'',
@@ -207,6 +221,7 @@
         center: null,
         rankList,
         barData,
+        proData,
         loginfo:{},
         visitFields:['ip','visit'],
         visitInfo:[],
@@ -219,10 +234,36 @@
       }, 1000)
       this.initLogInfo();
       this.querySaleInfo();
-      this.queryCur12Total();
+      this.querySale();
 
     },
     methods: {
+      async querySale(){
+       await this.query12();
+      this.queryCur12Total();
+      this.queryCur12TotalProfit();
+
+      },
+      query12(){
+     getAction(this.url.query12).then((res)=>{
+           console.info(res);
+           let list = res.result;
+         })
+      },
+      //查询最近12个月毛利润
+    queryCur12TotalProfit(){
+         getAction(this.url.queryCur12TotalProfit).then((res)=>{
+           console.info(res);
+           let list = res.result;
+        for (let i = 0; i < list.length; i += 1) {
+         proData.push({
+         x: `${list[i].month}月`,
+         y: list[i].total
+          })
+  }
+          //  this.saleInfo = res.result;
+          });
+      },
       //查询最近12个月数据
       queryCur12Total(){
          getAction(this.url.queryCur12Total).then((res)=>{
@@ -232,7 +273,7 @@
          barData.push({
          x: `${list[i].month}月`,
          y: list[i].total
-    })
+          })
   }
           //  this.saleInfo = res.result;
           });
@@ -240,8 +281,16 @@
       //查询销售数据
       querySaleInfo(){
           getAction(this.url.querySaleInfo).then((res)=>{
-           console.info(res);
-           this.saleInfo = res.result;
+           console.info(res.result);
+           if(res.result== null){
+            this.saleInfo.dailySales=0,
+           this.saleInfo.dailyProfit=0,
+           this.saleInfo.salesMonth=0,
+           this.saleInfo.profitMonth=0
+           }
+           else{
+             this.saleInfo = res.result;
+           }
           });
       },
       initLogInfo () {

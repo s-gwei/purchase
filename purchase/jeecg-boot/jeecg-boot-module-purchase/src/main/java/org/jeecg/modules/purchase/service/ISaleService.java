@@ -18,4 +18,8 @@ public interface ISaleService extends IService<Sale> {
     SaleVo queryCurrentSale();
 
     List<SaleCur12Vo> queryCur12Total();
+
+    List<SaleCur12Vo> queryCur12TotalProfit();
+
+    void query12();
 }
