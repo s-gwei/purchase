@@ -282,7 +282,11 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
 				<includes>
+<<<<<<< HEAD
 					<include>**/*.*</include>
+=======
+					<include>**/*.xlsx</include>
+>>>>>>> f6d104172cdb70a36ca0128fa488bffd8b9f3dfb
 				</includes>
             </resource>
 			<resource>
