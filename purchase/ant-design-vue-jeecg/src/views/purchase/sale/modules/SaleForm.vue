@@ -67,6 +67,15 @@
               <a-input-number v-decorator="['totalPrice']" placeholder="请输入总价" style="width: 100%" />
             </a-form-item>
           </a-col>
+           <a-col :span="24">
+                     <a-form-item label="订单日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-date-picker
+            style="width: 100%"
+            placeholder="请选择日期"
+            v-decorator="['createTime', {initialValue:!model.createTime?null:moment(model.createTime,dateFormat)}]"
+            :getCalendarContainer="node => node.parentNode"/>
+        </a-form-item>
+          </a-col> 
           <!-- <a-col :span="24">
             <a-form-item label="客户id" :labelCol="labelCol" :wrapperCol="wrapperCol">
               <a-input v-decorator="['customerId']" placeholder="请输入客户id"  ></a-input>
@@ -77,6 +86,7 @@
               <a-input v-decorator="['customerName']" placeholder="请输入客户店名"  ></a-input>
             </a-form-item>
           </a-col> -->
+          
           <a-col v-if="showFlowSubmitButton" :span="24" style="text-align: center">
             <a-button @click="submitForm">提 交</a-button>
           </a-col>
@@ -87,12 +97,10 @@
 </template>
 
 <script>
-import { filterObj } from '@/utils/util'
 import { httpAction, getAction } from '@/api/manage'
 import pick from 'lodash.pick'
-import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-import { validateDuplicateValue } from '@/utils/util'
 import JFormContainer from '@/components/jeecg/JFormContainer'
+import moment from 'moment'
 
 
 export default {
@@ -122,6 +130,7 @@ export default {
   },
   data() {
     return {
+      dateFormat:"YYYY-MM-DD HH:mm:ss",
       form: this.$form.createForm(this),
       couList: [],
       proList: [],
@@ -235,7 +244,8 @@ export default {
             'account',
             'totalPrice',
             'customerId',
-            'customerName'
+            'customerName',
+            'createTime'
           )
         )
       })
@@ -251,6 +261,7 @@ export default {
         })
       }
     },
+    moment,
     submitForm() {
       const that = this
       // 触发表单验证
@@ -266,6 +277,12 @@ export default {
             httpurl += this.url.edit
             method = 'put'
           }
+           if(!values.createTime){
+              values.createTime = '';
+            }else{
+              values.createTime = values.createTime.format(this.dateFormat);
+            }
+           console.log('values', values)
           let formData = Object.assign(this.model, values)
           console.log('表单提交数据', formData)
           httpAction(httpurl, formData, method)

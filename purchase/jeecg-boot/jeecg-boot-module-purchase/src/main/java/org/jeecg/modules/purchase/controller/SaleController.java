@@ -1,6 +1,9 @@
 package org.jeecg.modules.purchase.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -99,6 +102,16 @@ public class SaleController extends JeecgController<Sale, ISaleService> {
 		sale.setCompany("/斤");
 		Customer customer = customerService.getById(sale.getCustomerId());
 		sale.setCustomerName(customer.getShopName());
+
+//		SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd hh:mm:ss");
+//		String s = "2021-02-06 10:00:00";
+//		Date date = null;
+//		try {
+//			date= formatter.parse(s);
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
+//		sale.setCreateTime(date);
 		saleService.save(sale);
 		return Result.OK("添加成功！");
 	}

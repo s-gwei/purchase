@@ -41,6 +41,7 @@ import java.util.*;
 @Configuration
 public class ShiroConfig {
 
+//
     @Value("${jeecg.shiro.excludeUrls}")
     private String excludeUrls;
     @Resource

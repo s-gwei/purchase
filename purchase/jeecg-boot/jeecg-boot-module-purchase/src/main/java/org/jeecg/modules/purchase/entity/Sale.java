@@ -55,7 +55,7 @@ public class Sale implements Serializable {
     @ApiModelProperty(value = "客户店名")
     private java.lang.String customerName;
 	/**产品名称*/
-	@Excel(name = "产品名称", width = 15)
+	@Excel(name = "产品名称", width = 10)
     @ApiModelProperty(value = "产品名称")
     private java.lang.String productName;
 	/**产品id*/
@@ -63,19 +63,19 @@ public class Sale implements Serializable {
     @ApiModelProperty(value = "产品id")
     private java.lang.String productId;
 	/**单位*/
-	@Excel(name = "单位", width = 8)
+	@Excel(name = "单位", width = 10)
     @ApiModelProperty(value = "单位")
     private java.lang.String company;
 	/**单价*/
-	@Excel(name = "单价(元)", width = 8)
+	@Excel(name = "单价(元)", width = 15)
     @ApiModelProperty(value = "单价")
     private java.lang.Double unitPrice;
 	/**数量*/
-	@Excel(name = "数量", width = 8)
+	@Excel(name = "数量", width = 15)
     @ApiModelProperty(value = "数量")
     private java.lang.Double account;
 	/**总价*/
-	@Excel(name = "总价(元)", width = 8)
+	@Excel(name = "总价(元)", width = 15)
     @ApiModelProperty(value = "总价")
     private java.lang.Double totalPrice;
 	/**客户id*/

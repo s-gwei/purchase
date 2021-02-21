@@ -443,6 +443,7 @@
             }else{
               values.birthday = values.birthday.format(this.dateFormat);
             }
+            console.info(values)
             let formData = Object.assign(this.model, values);
             if(that.fileList != ''){
               formData.avatar = that.fileList;

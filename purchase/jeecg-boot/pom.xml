@@ -52,8 +52,8 @@
 		<module>jeecg-boot-base</module>
 		<module>jeecg-boot-module-demo</module>
 		<module>jeecg-boot-module-system</module>
-		<module>jeecg-boot-starter</module>
-		<module>jeecg-cloud-module</module>
+<!--		<module>jeecg-boot-starter</module>-->
+<!--		<module>jeecg-cloud-module</module>-->
         <module>jeecg-boot-module-purchase</module>
     </modules>
 
@@ -281,6 +281,9 @@
 			<resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+				<includes>
+					<include>**/*.*</include>
+				</includes>
             </resource>
 			<resource>
 				<directory>src/main/java</directory>
