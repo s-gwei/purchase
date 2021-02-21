@@ -6,9 +6,7 @@
         <a-row :gutter="24">
              <a-col :md="6" :sm="8">
             <a-form-item label="客户">
-              <!--<a-input placeholder="请输入账号查询" v-model="queryParam.username"></a-input>-->
-              <!-- <j-input placeholder="请选择客户" v-model="queryParam.username"></j-input>
-               -->
+           
                 <a-select  name="projectNameList" v-model="queryParam.customerId" placeholder="请选择客户" >
                         <a-select-option value="">请选择</a-select-option>
                         <a-select-option v-for="item in couList" :key="item.id" :value="item.id" >{{item.shopName}}</a-select-option>
@@ -17,8 +15,6 @@
           </a-col>
             <a-col :md="6" :sm="8">
             <a-form-item label="商品">
-              <!--<a-input placeholder="请输入账号查询" v-model="queryParam.username"></a-input>-->
-              <!-- <j-input placeholder="请选择商品" v-model="queryParam.username"></j-input> -->
                      <a-select  name="projectNameList" v-model="queryParam.productId" placeholder="请选择产品" >
                         <a-select-option value="">请选择</a-select-option>
                         <a-select-option v-for="item in proList" :key="item.id" :value="item.id" >{{item.name}}</a-select-option>
@@ -36,8 +32,8 @@
                 @ok="onDateOk"
               />
             </a-form-item>
-         
-          </a-col>
+            </a-col>
+        
              <a-col :md="6" :sm="8">
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
@@ -48,18 +44,13 @@
         </a-row>
       </a-form>
     </div>
-    <!-- 查询区域-END -->
-
-    <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增销售订单</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('出货订单表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <!-- <a-button type="primary" icon="import">导入</a-button> -->
+      
       </a-upload>
-      <!-- 高级查询区域 -->
-      <!-- <j-super-query :fieldList="superFieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query> -->
-      <a-dropdown v-if="selectedRowKeys.length > 0">
+    <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
         </a-menu>
@@ -67,7 +58,6 @@
       </a-dropdown>
     </div>
 
-    <!-- table区域-begin -->
     <div>
       <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
         <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项

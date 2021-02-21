@@ -77,6 +77,7 @@
               <a-input v-decorator="['customerName']" placeholder="请输入客户店名"  ></a-input>
             </a-form-item>
           </a-col> -->
+          
           <a-col v-if="showFlowSubmitButton" :span="24" style="text-align: center">
             <a-button @click="submitForm">提 交</a-button>
           </a-col>

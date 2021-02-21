@@ -78,6 +78,7 @@ public class JeecgController<T, S extends IService<T>> {
         // Step.3 AutoPoi 导出Excel
         ExportParams exportParamse =  new ExportParams(title + "报表",timeFormat,title);
         exportParamse.setStyle(ExcelExportStylerBorderImpl.class);
+        exportParamse.setIndexName("#");
         ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
         mv.addObject(NormalExcelConstants.FILE_NAME, title); //此处设置的filename无效 ,前端会重更新设置一下
         mv.addObject(NormalExcelConstants.CLASS, clazz);
