@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Mobandaochu {
-<<<<<<< HEAD
 //    public static TemplateExportParams getTemplateParams(String name){
 //        return new TemplateExportParams("D:\\a.xlsx");
 //    }
@@ -35,7 +34,6 @@ public class Mobandaochu {
 //        workbook.write(fos);
 //        fos.close();
 //    }
-=======
     public static TemplateExportParams getTemplateParams(String name){
         return new TemplateExportParams("D:\\a.xlsx");
     }
@@ -58,7 +56,6 @@ public class Mobandaochu {
         workbook.write(fos);
         fos.close();
     }
->>>>>>> f6d104172cdb70a36ca0128fa488bffd8b9f3dfb
 
 
 }

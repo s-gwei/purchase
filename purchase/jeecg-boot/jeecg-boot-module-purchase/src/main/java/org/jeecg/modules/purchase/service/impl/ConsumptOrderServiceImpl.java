@@ -17,8 +17,5 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 @Service
 public class ConsumptOrderServiceImpl extends ServiceImpl<ConsumptOrderMapper, ConsumptOrder> implements IConsumptOrderService {
 
-    @Override
-    public boolean save(ConsumptOrder entity) {
-        return false;
-    }
+
 }

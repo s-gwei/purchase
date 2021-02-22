@@ -11,6 +11,7 @@
                   name="projectNameList"
                   v-decorator="['customerId']"
                   placeholder="请选择客户"
+                  @change = "queryProList()"
                 >
                   <a-select-option value="">请选择</a-select-option>
                   <a-select-option v-for="item in couList" :key="item.id" :value="item.id">{{
@@ -28,10 +29,11 @@
                   name="projectNameList"
                   v-decorator="['productId']"
                   placeholder="请选择产品"
+                    @blur = "queryPrice()"
                 >
                   <a-select-option value="">请选择</a-select-option>
-                  <a-select-option v-for="item in proList" :key="item.id" :value="item.id">{{
-                    item.name
+                  <a-select-option v-for="item in proList" :key="item.orderId" :value="item.orderId">{{
+                    item.orderName
                   }}</a-select-option>
                 </a-select>
               </a-form-item>
@@ -150,7 +152,7 @@ export default {
         edit: '/purchase/sale/edit',
         queryById: '/purchase/sale/queryById',
         queryCouList: '/purchase/customer/queryList',
-        queryProList: '/purchase/product/queryList',
+        queryProList: '/purchase/consumptOrder/listAll',
       },
     }
   },
@@ -177,9 +179,26 @@ export default {
     //如果是流程中表单，则需要加载流程表单data
     this.showFlowData()
     this.queryCouList()
-    this.queryProList()
+    // this.queryProList()
   },
   methods: {
+    queryPrice(){
+        // console.info(this.form.getFieldValue('productId'))
+        let productIds = this.form.getFieldValue('productId')
+        console.info(productIds)
+        let product = {};
+        for(var i=0;i< this.proList.length;i++){
+          // console.info(this.proList[i]["orderId"] )
+          if( this.proList[i]["orderId"] ==productIds ){
+             product = this.proList[i]
+          }
+        }
+         console.info(product);
+          let record = []
+          record.unitPrice = product["price"];
+          this.model = Object.assign({}, record)
+       this.form.setFieldsValue(pick(this.model, 'unitPrice'))
+    },
     //计算总价
     calcul() {
       let unitPrice = this.form.getFieldValue('unitPrice')
@@ -221,9 +240,9 @@ export default {
     //查询客户信息
     queryCouList() {
       getAction(this.url.queryCouList).then((res) => {
-        console.info(res)
+        // console.info(res)
         this.couList = res.result
-        console.info(this.couList)
+        // console.info(this.couList)
       })
     },
     add() {

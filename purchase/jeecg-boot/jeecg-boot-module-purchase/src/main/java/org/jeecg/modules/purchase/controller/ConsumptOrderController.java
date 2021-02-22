@@ -19,7 +19,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 
 import org.jeecg.modules.purchase.entity.ConsumptOrder;
+import org.jeecg.modules.purchase.entity.Customer;
+import org.jeecg.modules.purchase.entity.Product;
 import org.jeecg.modules.purchase.service.IConsumptOrderService;
+import org.jeecg.modules.purchase.service.ICustomerService;
+import org.jeecg.modules.purchase.service.IProductService;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -47,9 +51,12 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 @RequestMapping("/purchase/consumptOrder")
 @Slf4j
 public class ConsumptOrderController extends JeecgController<ConsumptOrder, IConsumptOrderService> {
-	@Autowired
-	private IConsumptOrderService consumptOrderService;
-	
+	 @Autowired
+	 private IConsumptOrderService consumptOrderService;
+	 @Autowired
+	 private IProductService productService;
+	 @Autowired
+	 private ICustomerService customerService;
 	/**
 	 * 分页列表查询
 	 *
@@ -71,6 +78,15 @@ public class ConsumptOrderController extends JeecgController<ConsumptOrder, ICon
 		IPage<ConsumptOrder> pageList = consumptOrderService.page(page, queryWrapper);
 		return Result.OK(pageList);
 	}
+
+
+	 @AutoLog(value = "客户订单价格表")
+	 @ApiOperation(value="客户订单价格表-分页列表查询", notes="客户订单价格表-分页列表查询")
+	 @GetMapping(value = "/listAll")
+	 public Result<?> listAll() {
+		 List<ConsumptOrder> list = consumptOrderService.list();
+		 return Result.OK(list);
+	 }
 	
 	/**
 	 *   添加
@@ -82,6 +98,10 @@ public class ConsumptOrderController extends JeecgController<ConsumptOrder, ICon
 	@ApiOperation(value="客户订单价格表-添加", notes="客户订单价格表-添加")
 	@PostMapping(value = "/add")
 	public Result<?> add(@RequestBody ConsumptOrder consumptOrder) {
+		Product Product = productService.getById(consumptOrder.getOrderId());
+		Customer Customer = customerService.getById(consumptOrder.getCoumsterId());
+		consumptOrder.setCoumsterName(Customer.getShopName());
+		consumptOrder.setOrderName(Product.getName());
 		consumptOrderService.save(consumptOrder);
 		return Result.OK("添加成功！");
 	}

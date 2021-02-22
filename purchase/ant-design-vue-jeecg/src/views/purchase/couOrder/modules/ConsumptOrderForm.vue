@@ -3,28 +3,42 @@
     <j-form-container :disabled="formDisabled">
       <a-form :form="form" slot="detail">
         <a-row>
+               <div class="div-set" style="width: 100%">
+            <a-col :md="14" :sm="16">
+              <a-form-item class="form-item" label="客户店名" style="display: flex; position: relative; left: 117px">
+                <a-select
+                  style="width: 350px"
+                  name="projectNameList"
+                  v-decorator="['coumsterId']"
+                  placeholder="请选择客户"
+                >
+                  <a-select-option value="">请选择</a-select-option>
+                  <a-select-option v-for="item in couList" :key="item.id" :value="item.id">{{
+                    item.shopName
+                  }}</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+          </div>
+         <div style="align: auto">
+            <a-col :md="14" :sm="16">
+              <a-form-item label="产品名称" style="display: flex; position: relative; left: 117px">
+                <a-select
+                  style="width: 350px"
+                  name="projectNameList"
+                  v-decorator="['orderId']"
+                  placeholder="请选择产品"
+                >
+                  <a-select-option value="">请选择</a-select-option>
+                  <a-select-option v-for="item in proList" :key="item.id" :value="item.id">{{
+                    item.name
+                  }}</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+          </div>
           <a-col :span="24">
-            <a-form-item label="客户id" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input v-decorator="['coumsterId']" placeholder="请输入客户id"  ></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-item label="客户姓名" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input v-decorator="['coumsterName']" placeholder="请输入客户姓名"  ></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-item label="商品id" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input v-decorator="['orderId']" placeholder="请输入商品id"  ></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-item label="商品名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input v-decorator="['orderName']" placeholder="请输入商品名称"  ></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-item label="价格" :labelCol="labelCol" :wrapperCol="wrapperCol">
+            <a-form-item label="价格(元)" :labelCol="labelCol" :wrapperCol="wrapperCol">
               <a-input-number v-decorator="['price']" placeholder="请输入价格" style="width: 100%" />
             </a-form-item>
           </a-col>
@@ -76,6 +90,8 @@
     },
     data () {
       return {
+        couList: [],
+        proList: [],
         form: this.$form.createForm(this),
         model: {},
         labelCol: {
@@ -92,7 +108,9 @@
         url: {
           add: "/purchase/consumptOrder/add",
           edit: "/purchase/consumptOrder/edit",
-          queryById: "/purchase/consumptOrder/queryById"
+          queryById: "/purchase/consumptOrder/queryById",
+          queryCouList: '/purchase/customer/queryList',
+          queryProList: '/purchase/product/queryList',
         }
       }
     },
@@ -118,8 +136,26 @@
     created () {
       //如果是流程中表单，则需要加载流程表单data
       this.showFlowData();
+      this.queryCouList()
+      this.queryProList()
     },
     methods: {
+        //查询产品信息
+    queryProList() {
+      getAction(this.url.queryProList).then((res) => {
+        console.info(res)
+        this.proList = res.result
+        console.info(this.proList)
+      })
+    },
+    //查询客户信息
+    queryCouList() {
+      getAction(this.url.queryCouList).then((res) => {
+        console.info(res)
+        this.couList = res.result
+        console.info(this.couList)
+      })
+    },
       add () {
         this.edit({});
       },
