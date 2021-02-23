@@ -131,9 +131,9 @@ spring:
         connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
       datasource:
         master:
-          url: jdbc:mysql://39.104.17.229:3306/purchase?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+          url: jdbc:mysql://39.104.171.229:3306/purchase?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
           username: root
-          password: sungw
+          password: 212112313134
           driver-class-name: com.mysql.cj.jdbc.Driver
           # 多数据源配置
           #multi-datasource1:
@@ -145,7 +145,7 @@ spring:
   redis:
     database: 0
 #    host: 192.168.200.251
-    host: 39.104.17.229
+    host: 39.104.171.229
     lettuce:
       pool:
         max-active: 8   #最大连接数据库连接数,设 0 为没有限制

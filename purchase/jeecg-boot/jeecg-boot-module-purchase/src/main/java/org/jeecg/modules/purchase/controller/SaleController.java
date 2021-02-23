@@ -1,24 +1,16 @@
 package org.jeecg.modules.purchase.controller;
 
-import java.text.ParseException;
+import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.ss.formula.functions.T;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
-import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.purchase.entity.*;
 import org.jeecg.modules.purchase.service.ICustomerService;
 import org.jeecg.modules.purchase.service.IProductService;
@@ -29,18 +21,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 
-import org.jeecgframework.poi.excel.ExcelImportUtil;
-import org.jeecgframework.poi.excel.def.NormalExcelConstants;
-import org.jeecgframework.poi.excel.entity.ExportParams;
-import org.jeecgframework.poi.excel.entity.ImportParams;
-import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
+import org.jeecgframework.poi.excel.ExcelExportUtil;
+import org.jeecgframework.poi.excel.def.TemplateExcelConstants;
+import org.jeecgframework.poi.excel.entity.TemplateExportParams;
 import org.jeecg.common.system.base.controller.JeecgController;
+import org.jeecgframework.poi.excel.view.JeecgTemplateExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -181,24 +169,63 @@ public class SaleController extends JeecgController<Sale, ISaleService> {
     * @param request
     * @param sale
     */
-    @RequestMapping(value = "/exportXls")
-    public ModelAndView exportXls(HttpServletRequest request, Sale sale) {
-		// Step.1 组装查询条件
-		QueryWrapper<Sale> queryWrapper = QueryGenerator.initQueryWrapper(sale, request.getParameterMap());
-		LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-
-		// Step.2 获取导出数据
-		List<Sale> exportList = saleService.list(queryWrapper);
-
-		// 过滤选中数据
-		Double total = 0d;
-		for(Sale sales : exportList){
-			total+=sales.getTotalPrice() == null?0:sales.getTotalPrice();
-		}
-
-        return super.exportXls(request, sale, Sale.class, "武汉泓强食品有限责任公司,"+total);
-
-    }
+//    @RequestMapping(value = "/exportXls")
+//	@ApiOperation(value="出货订单表-模板导出", notes="出货订单表-模板导出")
+//    public ModelAndView exportXls(HttpServletRequest request, Sale sale) {
+//		// Step.1 组装查询条件
+//		QueryWrapper<Sale> queryWrapper = QueryGenerator.initQueryWrapper(sale, request.getParameterMap());
+//		LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+//
+//		// Step.2 获取导出数据
+//		List<Sale> exportList = saleService.list(queryWrapper);
+//
+//		// 过滤选中数据
+//		Double total = 0d;
+//		for(Sale sales : exportList){
+//			total+=sales.getTotalPrice() == null?0:sales.getTotalPrice();
+//		}
+//
+//        return super.exportXls(request, sale, Sale.class, "武汉泓强食品有限责任公司,"+total);
+//
+//    }
+	 @RequestMapping(value = "/exportXls")
+	 @ApiOperation(value="出货订单表-模板导出", notes="出货订单表-模板导出")
+	 public ModelAndView exportXls(HttpServletRequest request, Sale sale) throws IOException {
+		 // Step.1 组装查询条件
+		 QueryWrapper<Sale> queryWrapper = QueryGenerator.initQueryWrapper(sale, request.getParameterMap());
+		 // Step.2 获取导出数据
+		 List<Sale> exportList = saleService.list(queryWrapper);
+		 TemplateExportParams params = new TemplateExportParams("/templates/template.xlsx");
+		 Map<String, Object> map = new HashMap<String, Object>();
+		 Date time =new Date();
+		 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		 String timeFormat =sdf.format(time);
+		 Double total = 0d;
+		 String customerName = null;
+		 List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
+		 int i=1;
+		 for(Sale sales : exportList){
+			 Map<String, Object> lm = new HashMap<String, Object>();
+			 lm.put("i", i);
+			 lm.put("name", sales.getCustomerName());
+			 lm.put("company", sales.getCompany());
+			 lm.put("unionPrice", sales.getUnitPrice());
+			 lm.put("total", sales.getAccount());
+			 lm.put("price", sales.getTotalPrice());
+			 listMap.add(lm);
+			 i++;
+			 customerName= sales.getCustomerName();
+			 total+=sales.getTotalPrice() == null?0:sales.getTotalPrice();
+		 }
+		 map.put("name", customerName);
+		 map.put("date", timeFormat);
+		 map.put("totalPrice", total);
+		 map.put("maplist",listMap);
+		 ModelAndView mv = new ModelAndView(new JeecgTemplateExcelView());
+		 mv.addObject(TemplateExcelConstants.PARAMS,params);
+		 mv.addObject(TemplateExcelConstants.MAP_DATA,map);
+		 return mv;
+	 }
 
 
 	 /**
